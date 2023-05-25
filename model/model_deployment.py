@@ -26,7 +26,8 @@ def predict(txt):
     model.load_weights("./model_1.h5")
     
     data = pd.DataFrame([txt], columns= ['plot'])
-    Transformer = SentenceTransformer('bert-base-uncased')
+    modelPath = "./model/sentence_transformers"
+    Transformer = SentenceTransformer(modelPath)
     sentence_embeddings = Transformer.encode(data['plot'].values)
     pre = model.predict(sentence_embeddings)
     cols = ['p_Action', 'p_Adventure', 'p_Animation', 'p_Biography', 'p_Comedy', 'p_Crime', 'p_Documentary', 'p_Drama', 'p_Family',
