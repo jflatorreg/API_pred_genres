@@ -8,7 +8,7 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Dropout
 
-from tensorflow.keras.activations import relu, swish, sigmoid
+from keras.activations import relu, swish, sigmoid
 from sentence_transformers import SentenceTransformer
 
 def predict(txt):
