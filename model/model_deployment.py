@@ -34,7 +34,7 @@ def predict(txt):
         'p_Sci-Fi', 'p_Short', 'p_Sport', 'p_Thriller', 'p_War', 'p_Western']
     res = pd.DataFrame(pre, index=data.index, columns=cols)
     
-    return res
+    return res.to_dict('records')[0]
 
 
 if __name__ == "__main__":

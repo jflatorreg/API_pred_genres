@@ -4,8 +4,6 @@ import joblib
 from model_deployment import predict
 from flask_cors import CORS
 from gevent.pywsgi import WSGIServer
-import pandas as pd
-import numpy as np
 
 
 app = Flask(__name__)
@@ -45,7 +43,7 @@ class PhishingApi(Resource):
     def get(self):
         args = parser.parse_args()
         
-        return predict(args['txt']).to_dict('records')[0], 200
+        return {predict(args['txt'])}, 200
     
     
 if __name__ == '__main__':
