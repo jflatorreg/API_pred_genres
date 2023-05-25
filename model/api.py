@@ -43,7 +43,9 @@ class PhishingApi(Resource):
     def get(self):
         args = parser.parse_args()
         
-        return {predict(args['txt'])}, 200
+        return {
+         "result": predict(args['txt'])
+        }, 200
     
     
 if __name__ == '__main__':
