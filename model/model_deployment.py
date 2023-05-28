@@ -3,39 +3,24 @@
 import pandas as pd
 import numpy as np
 import sys
-
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import Dropout
-
-from keras.activations import relu, swish, sigmoid
-from sentence_transformers import SentenceTransformer
+import pickle
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 def predict(txt):
-     
-    def wider_model():
-        model = Sequential()
-        model.add(Dense(669, input_shape=(768,),activation=relu))
-        model.add(Dropout(0.10769379659079174))
-        model.add(Dense(96, input_shape=(768,),activation=swish))
-        model.add(Dropout(0.022278422538476006))
-        model.add(Dense(24, activation=sigmoid))
-        return model
-
-    model = wider_model()
-    model.load_weights("./model_1.h5")
+    clf = pickle.load(open('clf', 'rb'))
+    # Load the vocabulary
+    vocabulary_to_load = pickle.load(open('dict', 'rb'))
+    vect = CountVectorizer(max_features=512, vocabulary = vocabulary_to_load)
+    X = vect.transform([txt])
+    res = clf.predict_proba(X)
     
-    data = pd.DataFrame([txt], columns= ['plot'])
-    modelPath = "./model/sentence_transformers"
-    Transformer = SentenceTransformer(modelPath)
-    sentence_embeddings = Transformer.encode(data['plot'].values)
-    pre = model.predict(sentence_embeddings)
     cols = ['p_Action', 'p_Adventure', 'p_Animation', 'p_Biography', 'p_Comedy', 'p_Crime', 'p_Documentary', 'p_Drama', 'p_Family',
-        'p_Fantasy', 'p_Film-Noir', 'p_History', 'p_Horror', 'p_Music', 'p_Musical', 'p_Mystery', 'p_News', 'p_Romance',
-        'p_Sci-Fi', 'p_Short', 'p_Sport', 'p_Thriller', 'p_War', 'p_Western']
-    res = pd.DataFrame(pre, index=data.index, columns=cols)
+            'p_Fantasy', 'p_Film-Noir', 'p_History', 'p_Horror', 'p_Music', 'p_Musical', 'p_Mystery', 'p_News', 'p_Romance',
+            'p_Sci-Fi', 'p_Short', 'p_Sport', 'p_Thriller', 'p_War', 'p_Western']
     
-    return res.max().index[0] + ": " + str(res.max()[0])
+    return dict(zip(cols, res[0]))
 
 
 if __name__ == "__main__":
@@ -50,5 +35,5 @@ if __name__ == "__main__":
         p1 = predict(txt)
         
         #print(url)
-        print('price: ', p1)
+        print('predictions: ', p1)
         
